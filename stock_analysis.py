@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+import base64
 
 # Read the trade log data from the CSV file
 trade_log = pd.read_csv("tradelog.csv")
@@ -78,17 +79,19 @@ st.write("Max Drawdown Percentage:", max_drawdown_percentage)
 st.write("CAGR:", cagr)
 st.write("Calmar Ratio:", calmar_ratio)
 
-# Save the results to a CSV file
-if st.button("Save Results to CSV"):
-    results = pd.DataFrame({
-        'Parameter': ['Total Trades', 'Profitable Trades', 'Loss-Making Trades', 'Win Rate',
-                      'Average Profit per Trade', 'Average Loss per Trade', 'Risk Reward Ratio',
-                      'Expectancy', 'Average ROR per Trade', 'Sharpe Ratio', 'Max Drawdown',
-                      'Max Drawdown Percentage', 'CAGR', 'Calmar Ratio'],
-        'Value': [total_trades, profitable_trades, loss_making_trades, win_rate,
-                  average_profit_per_trade, average_loss_per_trade, risk_reward_ratio,
-                  expectancy, rate_of_return, sharpe_ratio, max_drawdown, max_drawdown_percentage,
-                  cagr, calmar_ratio]
-    })
-    results.to_csv('results.csv', index=False)
-    st.success("Results saved to results.csv")
+results = pd.DataFrame({
+    'Parameter': ['Total Trades', 'Profitable Trades', 'Loss-Making Trades', 'Win Rate',
+                  'Average Profit per Trade', 'Average Loss per Trade', 'Risk Reward Ratio',
+                  'Expectancy', 'Average ROR per Trade', 'Sharpe Ratio', 'Max Drawdown',
+                  'Max Drawdown Percentage', 'CAGR', 'Calmar Ratio'],
+    'Value': [total_trades, profitable_trades, loss_making_trades, win_rate,
+              average_profit_per_trade, average_loss_per_trade, risk_reward_ratio,
+              expectancy, rate_of_return, sharpe_ratio, max_drawdown, max_drawdown_percentage,
+              cagr, calmar_ratio]
+})
+# Save to CSV
+csv = results.to_csv(index=False)
+st.download_button("Download CSV file",
+                   csv,
+                   file_name='output.csv',
+                   mime='text/csv')
